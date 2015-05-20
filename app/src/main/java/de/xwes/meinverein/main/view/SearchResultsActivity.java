@@ -1,9 +1,13 @@
 package de.xwes.meinverein.main.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,7 +16,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
 import de.xwes.meinverein.R;
+import de.xwes.meinverein.main.service.request.RegisterRequest;
 
 
 public class SearchResultsActivity extends Activity
@@ -20,6 +28,7 @@ public class SearchResultsActivity extends Activity
 
     private String[] teams;
     private String[] links;
+    private String selectedTeam ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,11 +36,12 @@ public class SearchResultsActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
+
         ListView list = (ListView) findViewById(R.id.search_results);
 
         Intent intent = getIntent();
 
-        String json = intent.getStringExtra("json");
+        final String json = intent.getStringExtra("json");
         try {
             JSONArray jObj = new JSONArray(json);
             teams = new String[jObj.length()];
@@ -49,11 +59,88 @@ public class SearchResultsActivity extends Activity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.search_item, R.id.teamname, teams);
         list.setAdapter(adapter);
 
-        for(int j = 0; j < teams.length; j++)
-        {
-            Log.i("Team " + j, links[j]);
-        }
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedTeam = parent.getItemAtPosition(position).toString();
+                int index = Arrays.asList(teams).indexOf(selectedTeam);
+                String link = "www.fupa.net" + links[index];
+
+                selectedTeam = selectedTeam.replaceAll(" ", "%20");
+                selectedTeam = selectedTeam.replaceAll("ö", "oe");
+                selectedTeam = selectedTeam.replaceAll("ä", "ae");
+                selectedTeam = selectedTeam.replaceAll("ü", "ue");
+                String dbName = selectedTeam;
+                dbName = dbName.replaceAll("%20", "");
+                dbName = dbName.replaceAll("/", "");
+                dbName = dbName.replaceAll("-", "");
+                dbName = dbName.replaceAll("ö", "oe");
+                dbName = dbName.replaceAll("ü", "ue");
+                dbName = dbName.replaceAll("ä", "ae");
+                dbName = dbName.toLowerCase();
+                if(dbName.contains("."))
+                {
+                    dbName = dbName.replace(".","");
+                }
+
+                RegisterRequest registerRequest = new RegisterRequest();
+                String returnValue = "";
+                try {
+                    returnValue = registerRequest.execute(selectedTeam, link).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                if(returnValue.contains("Status") && returnValue.contains("ok"))
+                {
+                    SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
+                    String dbNameKey = "de.xwes.meinverein.dbname";
+                    String linkKey = "de.xwes.meinverein.link";
+                    String teamNameKey = "de.xwes.meinverein.teamname";
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(dbNameKey, dbName);
+                    editor.putString(teamNameKey, selectedTeam);
+                    editor.putString(linkKey, link);
+                    editor.commit();
+
+                    Intent myIntent = new Intent(SearchResultsActivity.this, OverviewActivity.class);
+                    startActivity(myIntent);
+
+                }
+                else
+                {
+
+                }
+
+            }
+        });
 
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
+        String dbNameKey = "de.xwes.meinverein.dbname";
+        String linkKey = "de.xwes.meinverein.link";
+        String teamNameKey = "de.xwes.meinverein.teamname";
+
+        String teamname = prefs.getString(teamNameKey, null);
+        String link = prefs.getString(linkKey, null);
+        String dbName = prefs.getString(dbNameKey, null);
+
+        if(teamname != null && link != null && dbName != null)
+        {
+            Intent myIntent = new Intent(SearchResultsActivity.this, OverviewActivity.class);
+            startActivity(myIntent);
+        }
+        else
+        {
+            Log.i("Fehler", " noch nicht da");
+        }
+    }
 }

@@ -6,4 +6,5 @@
     <string name="choose_team">Geben Sie den Namen ihres Vereins ein!</string>
     <string name="search_team">Verein suchen</string>
     <string name="search_result">Gefundene Vereine:</string>
+    <string name="title_activity_overview">OverviewActivity</string>
 </resources>

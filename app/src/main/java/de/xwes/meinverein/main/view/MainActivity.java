@@ -1,7 +1,9 @@
 package de.xwes.meinverein.main.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,13 +27,33 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
+
+        SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
+        String dbNameKey = "de.xwes.meinverein.dbname";
+        String linkKey = "de.xwes.meinverein.link";
+        String teamNameKey = "de.xwes.meinverein.teamname";
+
+        String teamname = prefs.getString(teamNameKey, null);
+        String link = prefs.getString(linkKey, null);
+        String dbName = prefs.getString(dbNameKey, null);
+
+        if(teamname != null && link != null && dbName != null)
+        {
+            Log.i("Schon vorhanden" , teamname);
+            Intent myIntent = new Intent(MainActivity.this, OverviewActivity.class);
+            startActivity(myIntent);
+        }
+        else
+        {
+            Log.i("Fehler", " noch nicht da");
+        }
+
         search_input = (EditText) findViewById(R.id.search_input);
 
         Button search = (Button) findViewById(R.id.search_button);
@@ -41,7 +63,7 @@ public class MainActivity extends Activity
             public void onClick(View v)
             {
                 String search_string = search_input.getText().toString();
-                search_string = search_string.replace(" ", "%20");
+                search_string = search_string.replaceAll(" ", "%20");
                 SearchRequest searchRequest = new SearchRequest();
                 JSONArray jsonArray = null;
                 try {
@@ -51,9 +73,6 @@ public class MainActivity extends Activity
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-
-                Log.i("JSON", jsonArray.toString());
-
                 Intent myIntent = new Intent(MainActivity.this, SearchResultsActivity.class);
                 myIntent.putExtra("json", jsonArray.toString());
                 startActivity(myIntent);

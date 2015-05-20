@@ -19,21 +19,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Created by Xaver on 07.05.2015.
+ * Created by Xaver on 20.05.2015.
  */
-public class SearchRequest extends AsyncTask<String, Void, JSONArray> {
-
+public class RegisterRequest  extends AsyncTask<String, Void,String>
+{
     static InputStream is = null;
     static JSONArray jObj = null;
     static String json = "";
 
     @Override
-    protected JSONArray doInBackground(String... params)
+    protected String doInBackground(String... params)
     {
-
         try {
-            StringBuilder url_request = new StringBuilder("http://192.168.0.7/fussball-app/search_team.php?name=");
+            StringBuilder url_request = new StringBuilder("http://192.168.0.7/fussball-app/register.php?name=");
             url_request.append(params[0]);
+            url_request.append("&link=");
+            url_request.append(params[1]);
 
             Log.i("url", url_request.toString());
             HttpClient httpClient = new DefaultHttpClient();
@@ -69,16 +70,6 @@ public class SearchRequest extends AsyncTask<String, Void, JSONArray> {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
 
-
-        // try parse the string to a JSON object
-        try {
-            jObj = new JSONArray(json);
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
-
-        // return JSON String
-        return jObj;
+        return json;
     }
-
 }
