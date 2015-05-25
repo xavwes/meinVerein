@@ -31,7 +31,7 @@ public class RegisterRequest  extends AsyncTask<String, Void,String>
     protected String doInBackground(String... params)
     {
         try {
-            StringBuilder url_request = new StringBuilder("http://192.168.0.7/fussball-app/register.php?name=");
+            StringBuilder url_request = new StringBuilder("http://192.168.0.7/meinVerein/server/register.php?name=");
             url_request.append(params[0]);
             url_request.append("&link=");
             url_request.append(params[1]);

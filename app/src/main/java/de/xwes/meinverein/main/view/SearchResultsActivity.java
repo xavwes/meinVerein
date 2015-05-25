@@ -1,6 +1,8 @@
 package de.xwes.meinverein.main.view;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -20,6 +23,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import de.xwes.meinverein.R;
+import de.xwes.meinverein.main.service.request.CreateTeamDataRequest;
 import de.xwes.meinverein.main.service.request.RegisterRequest;
 
 
@@ -29,6 +33,9 @@ public class SearchResultsActivity extends Activity
     private String[] teams;
     private String[] links;
     private String selectedTeam ="";
+    public static Context mContext = null;
+    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,8 +43,12 @@ public class SearchResultsActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-
+        mContext = this;
         ListView list = (ListView) findViewById(R.id.search_results);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
 
         Intent intent = getIntent();
 
@@ -93,7 +104,34 @@ public class SearchResultsActivity extends Activity
                     e.printStackTrace();
                 }
 
-                if(returnValue.contains("Status") && returnValue.contains("ok"))
+                if(returnValue.contains("Status=ok"))
+                {
+                    SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
+                    String dbNameKey = "de.xwes.meinverein.dbname";
+                    String linkKey = "de.xwes.meinverein.link";
+                    String teamNameKey = "de.xwes.meinverein.teamname";
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(dbNameKey, dbName);
+                    editor.putString(teamNameKey, selectedTeam);
+                    editor.putString(linkKey, link);
+                    editor.commit();
+
+                    //Progress Dialog
+                    new CreateTeamDataRequest(SearchResultsActivity.this).execute(selectedTeam,link);
+
+
+                    /*if(jsonArray!= null)
+                    {
+                        Intent myIntent = new Intent(SearchResultsActivity.this, OverviewActivity.class);
+                        myIntent.putExtra("json", jsonArray.toString());
+                        startActivity(myIntent);
+                    }
+*/
+
+
+                }
+                else if(returnValue.contains("Status=existing"))
                 {
                     SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
                     String dbNameKey = "de.xwes.meinverein.dbname";
@@ -108,11 +146,10 @@ public class SearchResultsActivity extends Activity
 
                     Intent myIntent = new Intent(SearchResultsActivity.this, OverviewActivity.class);
                     startActivity(myIntent);
-
                 }
                 else
                 {
-
+                    //Fehlerfall
                 }
 
             }
@@ -143,4 +180,9 @@ public class SearchResultsActivity extends Activity
             Log.i("Fehler", " noch nicht da");
         }
     }
+
+
+
+
+
 }

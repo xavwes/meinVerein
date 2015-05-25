@@ -32,7 +32,7 @@ public class SearchRequest extends AsyncTask<String, Void, JSONArray> {
     {
 
         try {
-            StringBuilder url_request = new StringBuilder("http://192.168.0.7/fussball-app/search_team.php?name=");
+            StringBuilder url_request = new StringBuilder("http://192.168.0.7/meinVerein/server/search_team.php?name=");
             url_request.append(params[0]);
 
             Log.i("url", url_request.toString());
