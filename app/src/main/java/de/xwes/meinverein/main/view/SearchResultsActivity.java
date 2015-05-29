@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import de.xwes.meinverein.R;
+import de.xwes.meinverein.main.model.MySQLiteHelper;
 import de.xwes.meinverein.main.service.request.CreateTeamDataRequest;
 import de.xwes.meinverein.main.service.request.RegisterRequest;
 
@@ -118,7 +119,7 @@ public class SearchResultsActivity extends Activity
                     editor.commit();
 
                     //Progress Dialog
-                    new CreateTeamDataRequest(SearchResultsActivity.this).execute(selectedTeam,link);
+                    new CreateTeamDataRequest(SearchResultsActivity.this).execute(selectedTeam, link);
 
 
                     /*if(jsonArray!= null)
