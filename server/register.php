@@ -5,15 +5,9 @@
  * Date: 13.05.15
  * Time: 13:57
  */
-    $host = "localhost";
-    $user = "root";
-    $pw = "";
-    $mysqldb = "fussball_app";
+    include_once('db_connection.php');
 
-   
-    $connection = mysql_connect($host, $user, $pw) or die ("Verbindung fehlgeschlagen");
-
-    mysql_select_db($mysqldb, $connection) or die("DB nicht gefunden");
+    $connection = connectToDatabase();
 
     $teamname = $_GET['name'];
     $teamlink = $_GET['link'];
@@ -21,23 +15,36 @@
     $teamname = str_replace(" ", "", $teamname);
     $teamname = str_replace("/", "", $teamname);
     $teamname = str_replace(".", "", $teamname);
+    $teamname = str_replace("-", "", $teamname);
     $teamname = strtolower($teamname);
 
-    $sql = "Insert into vereine(id, teamname, link)
-    SELECT * FROM (SELECT 0,'" . $teamname . "','" . $teamlink . "') as tmp
-        where not exists(Select teamname from vereine where teamname='" . $teamname . "')";
-
-    $response = array();
-    if(mysql_query($sql))
+    $sql = "Select * from vereine where teamname='" . $teamname . "' and link='" . $teamlink . "'";
+    $ergebnis = mysql_query($sql);
+    $response = "";
+    if(mysql_num_rows($ergebnis) == 0 )
     {
-        $response= array("Status" =>"ok");
+        $sql = "Insert into vereine(id, teamname, link)
+            SELECT * FROM (SELECT 0,'" . $teamname . "','" . $teamlink . "') as tmp
+            where not exists(Select teamname from vereine where teamname='" . $teamname . "')";
+
+
+        if(mysql_query($sql))
+        {
+            $response= "Status=ok";
+        }
+        else
+        {
+            $response="Status=fail";
+        }
     }
     else
     {
-        $response=array("Status" => "fail");
+        $response = "Status=existing";
     }
 
-    echo json_encode($response);
+
+
+    echo $response;
 
 
 
