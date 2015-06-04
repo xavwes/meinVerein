@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,9 @@ public class GameDataSource
         long id = database.insert(dbHelper.TABLE_SPIELE, dbHelper.COLUMN_ID_SPIELE, values);
     }
 
-    public List<Game> getAllGames(String mannschaft)
+    public ArrayList<Game> getAllGames(String mannschaft)
     {
-        List<Game> games = new ArrayList<Game>();
+        ArrayList<Game> games = new ArrayList<Game>();
 
         String sql = "Select * from spiele where home = ? or away = ?";
         Cursor cursor = database.rawQuery(sql, new String[]{mannschaft, mannschaft});

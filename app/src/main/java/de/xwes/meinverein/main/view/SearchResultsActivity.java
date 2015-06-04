@@ -121,16 +121,6 @@ public class SearchResultsActivity extends Activity
                     //Progress Dialog
                     new CreateTeamDataRequest(SearchResultsActivity.this).execute(selectedTeam, link);
 
-
-                    /*if(jsonArray!= null)
-                    {
-                        Intent myIntent = new Intent(SearchResultsActivity.this, OverviewActivity.class);
-                        myIntent.putExtra("json", jsonArray.toString());
-                        startActivity(myIntent);
-                    }
-*/
-
-
                 }
                 else if(returnValue.contains("Status=existing"))
                 {

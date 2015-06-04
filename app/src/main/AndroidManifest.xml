@@ -3,6 +3,8 @@
     package="de.xwes.meinverein" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +27,18 @@
             android:name=".main.view.OverviewActivity"
             android:label="@string/title_activity_overview" >
         </activity>
+        <activity
+            android:name=".main.view.GamesOverviewActivity"
+            android:label="@string/title_activity_overview"
+            android:parentActivityName=".main.view.OverviewActivity" >
+        </activity>
+        <activity
+            android:name=".main.view.GameDetailActivity"
+            android:label="@string/title_activity_game_detail"
+            android:parentActivityName=".main.view.GamesOverviewActivity">
+        </activity>
+
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBERwYKVx52DM0VaMxg9l4LNjyz_1ro-lw"/>
     </application>
 
 </manifest>

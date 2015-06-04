@@ -1,11 +1,15 @@
 package de.xwes.meinverein.main.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -32,11 +36,23 @@ public class OverviewActivity extends ActionBarActivity
     private ArrayList<Game> games = new ArrayList<Game>();
     private TeamDataSource teamDataSource;
     private GameDataSource gameDataSource;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        mContext = this;
+
+        SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
+        String teamNameKey = "de.xwes.meinverein.teamname";
+        String teamname = prefs.getString(teamNameKey, null);
+
+        if(teamname != null)
+        {
+            teamname = teamname.replace("%20", " ");
+            setTitle(teamname);
+        }
 
         Intent intent = getIntent();
         json = intent.getStringExtra("json");
@@ -94,6 +110,26 @@ public class OverviewActivity extends ActionBarActivity
         ListView listView = (ListView) findViewById(R.id.list_teams);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.search_item, R.id.teamname, teams);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                GameDataSource gameDataSource = new GameDataSource(mContext);
+                gameDataSource.open();
+                ArrayList<Game> gamesOfTeam = gameDataSource.getAllGames(parent.getItemAtPosition(position).toString());
+
+                Bundle extra = new Bundle();
+                extra.putSerializable("games", gamesOfTeam);
+
+                Intent intent = new Intent(mContext, GamesOverviewActivity.class);
+                intent.putExtra("extra", extra);
+                Log.i("Teamname", parent.getItemAtPosition(position).toString());
+                intent.putExtra("team", parent.getItemAtPosition(position).toString());
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 
