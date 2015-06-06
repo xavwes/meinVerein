@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,15 +15,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import de.xwes.meinverein.R;
 import de.xwes.meinverein.main.model.Game;
 import de.xwes.meinverein.main.model.GameDataSource;
-import de.xwes.meinverein.main.model.MySQLiteHelper;
-import de.xwes.meinverein.main.model.Team;
 import de.xwes.meinverein.main.model.TeamDataSource;
 
 public class OverviewActivity extends ActionBarActivity
@@ -37,6 +31,8 @@ public class OverviewActivity extends ActionBarActivity
     private TeamDataSource teamDataSource;
     private GameDataSource gameDataSource;
     private Context mContext;
+    private String teamname;
+    private String dbTeamName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +42,10 @@ public class OverviewActivity extends ActionBarActivity
 
         SharedPreferences prefs = getSharedPreferences("de.xwes.meinverein", Context.MODE_PRIVATE);
         String teamNameKey = "de.xwes.meinverein.teamname";
-        String teamname = prefs.getString(teamNameKey, null);
+        teamname = prefs.getString(teamNameKey, null);
+
+        String dbNameKey = "de.xwes.meinverein.dbname";
+        dbTeamName = prefs.getString(dbNameKey, null);
 
         if(teamname != null)
         {
@@ -54,6 +53,7 @@ public class OverviewActivity extends ActionBarActivity
             setTitle(teamname);
         }
 
+        //JSON in DB wenn JSON im Intent vorhanden
         Intent intent = getIntent();
         json = intent.getStringExtra("json");
         if(json!= "" && json!= null)
@@ -100,7 +100,7 @@ public class OverviewActivity extends ActionBarActivity
         }
         else
         {
-            TeamDataSource teamDataSource = new TeamDataSource(this);
+            teamDataSource = new TeamDataSource(this);
             teamDataSource.open();
             teams = teamDataSource.getAllTeams();
             teamDataSource.close();
@@ -116,17 +116,11 @@ public class OverviewActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                GameDataSource gameDataSource = new GameDataSource(mContext);
-                gameDataSource.open();
-                ArrayList<Game> gamesOfTeam = gameDataSource.getAllGames(parent.getItemAtPosition(position).toString());
-
-                Bundle extra = new Bundle();
-                extra.putSerializable("games", gamesOfTeam);
+                String mannschaftsName = parent.getItemAtPosition(position).toString();
+                Log.i("MannschaftsNAme", mannschaftsName);
 
                 Intent intent = new Intent(mContext, GamesOverviewActivity.class);
-                intent.putExtra("extra", extra);
-                Log.i("Teamname", parent.getItemAtPosition(position).toString());
-                intent.putExtra("team", parent.getItemAtPosition(position).toString());
+                intent.putExtra("mannschaftsname", mannschaftsName);
                 mContext.startActivity(intent);
             }
         });

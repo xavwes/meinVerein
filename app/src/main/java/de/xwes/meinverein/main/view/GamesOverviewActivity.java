@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import de.xwes.meinverein.R;
 import de.xwes.meinverein.main.model.Game;
+import de.xwes.meinverein.main.model.GameDataSource;
 
 public class GamesOverviewActivity extends ActionBarActivity
 {
@@ -34,28 +35,29 @@ public class GamesOverviewActivity extends ActionBarActivity
         ListView listView = (ListView) findViewById(R.id.games_overview_list);
 
         Intent intent = this.getIntent();
-        Bundle extra = intent.getBundleExtra("extra");
+        teamname = intent.getStringExtra("mannschaftsname");
 
-        if(extra != null)
-        {
-            teamname = intent.getStringExtra("team");
-            games = (ArrayList<Game>) extra.getSerializable("games");
-            setTitle(teamname);
+        setTitle(teamname);
 
-            GamesOverviewAdapter gamesOverviewAdapter = new GamesOverviewAdapter(this,games, teamname);
+        GameDataSource gameDataSource = new GameDataSource(mContext);
+        gameDataSource.open();
+        games = gameDataSource.getAllGames(teamname);
+        gameDataSource.close();
+        GamesOverviewAdapter gamesOverviewAdapter = new GamesOverviewAdapter(this,games, teamname);
 
-            listView.setAdapter(gamesOverviewAdapter);
+        listView.setAdapter(gamesOverviewAdapter);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Game g = (Game) parent.getItemAtPosition(position);
+
                     Bundle extra = new Bundle();
                     extra.putSerializable("game", g);
 
                     Intent intent = new Intent(mContext, GameDetailActivity.class);
                     intent.putExtra("extra", extra);
-                    intent.putExtra("team", teamname);
+                    intent.putExtra("teamname", teamname);
                     mContext.startActivity(intent);
                 }
             });
@@ -63,7 +65,7 @@ public class GamesOverviewActivity extends ActionBarActivity
 
 
 
-     }
+
 
     @Override
     protected void onResume()

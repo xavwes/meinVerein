@@ -13,23 +13,23 @@
         android:id="@+id/zeit_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="34dp"
+        android:textSize="28dp"
         android:text="abc"/>
 
     <TextView
         android:id="@+id/spielort"
         android:text="spielort"
-        android:textSize="34dp"
+        android:textSize="28dp"
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <fragment
+    <!--<fragment
         android:id="@+id/map"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"/>-->
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class GameDetailActivity extends ActionBarActivity {
         Intent intent = this.getIntent();
         Bundle extra = intent.getBundleExtra("extra");
         game = (Game) extra.getSerializable("game");
-        team = intent.getStringExtra("team");
+        team = intent.getStringExtra("teamname");
 
         if(team.equals(game.getAway()))
         {
@@ -37,7 +38,15 @@ public class GameDetailActivity extends ActionBarActivity {
             setTitle(game.getAway());
         }
 
+        String zeit_game = game.getZeit();
+        String[] zeiten = zeit_game.split(" ");
+        String newZeit = zeiten[0] + " " + zeiten[1] + "\n" + zeiten[2] + " Uhr";
 
+        TextView zeit = (TextView) findViewById(R.id.zeit_detail);
+        TextView ort = (TextView) findViewById(R.id.spielort);
+
+        ort.setText(game.getOrt());
+        zeit.setText(newZeit);
 
     }
 
@@ -47,7 +56,9 @@ public class GameDetailActivity extends ActionBarActivity {
         switch (item.getItemId())
         {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra("mannschaftsname", team);
+                NavUtils.navigateUpTo(this, intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

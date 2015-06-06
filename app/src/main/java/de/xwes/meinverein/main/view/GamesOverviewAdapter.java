@@ -43,15 +43,26 @@ public class GamesOverviewAdapter extends ArrayAdapter<Game>
         String[] zeiten = zeit.split(" ");
         String newZeit = zeiten[0] + "\n" + zeiten[1] + "\n" + zeiten[2];
         datum.setText(newZeit);
-        ergebnis.setText(games.get(position).getErgebnis());
+
         if(games.get(position).getHome().equals(selectedTeam))
         {
             gegner.setText(games.get(position).getAway());
+            ergebnis.setText(games.get(position).getErgebnis());
         }
         else
         {
             gegner.setText(games.get(position).getHome());
+            ergebnis.setText(changeErgebnis(games.get(position).getErgebnis()));
         }
         return rowView;
+    }
+
+    public String changeErgebnis(String ergebnis)
+    {
+        String newErgebnis = ergebnis;
+        char home = ergebnis.charAt(0);
+        char away = ergebnis.charAt(2);
+        newErgebnis = away + ":" + home;
+        return newErgebnis;
     }
 }
