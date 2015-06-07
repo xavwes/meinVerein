@@ -11,4 +11,7 @@
     <string name="title_activity_games_overview">GamesOverviewActivity</string>
     <string name="games_overview">Spiele:</string>
     <string name="title_activity_game_detail">GameDetailActivity</string>
+    <string name="date">Datum</string>
+    <string name="gegner">Gegner</string>
+    <string name="ergebnis">Ergebnis</string>
 </resources>

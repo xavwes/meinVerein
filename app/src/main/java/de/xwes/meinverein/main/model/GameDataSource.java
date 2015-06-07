@@ -45,6 +45,17 @@ public class GameDataSource
         long id = database.insert(dbHelper.TABLE_SPIELE, dbHelper.COLUMN_ID_SPIELE, values);
     }
 
+    public void updateGame(long id, Game game)
+    {
+        ContentValues values = new ContentValues();
+        values.put(dbHelper.COLUMN_HOMETEAM, game.getHome());
+        values.put(dbHelper.COLUMN_AWAYTEAM, game.getAway());
+        values.put(dbHelper.COLUMN_ERGEBNIS, game.getErgebnis());
+        values.put(dbHelper.COLUMN_ORT, game.getOrt());
+        values.put(dbHelper.COLUMN_TIME, game.getZeit());
+        database.update(dbHelper.TABLE_SPIELE, values, "id=" + id, null);
+    }
+
     public ArrayList<Game> getAllGames(String mannschaft)
     {
         ArrayList<Game> games = new ArrayList<Game>();

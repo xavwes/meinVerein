@@ -3,6 +3,8 @@ package de.xwes.meinverein.main.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +18,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import de.xwes.meinverein.R;
 import de.xwes.meinverein.main.model.Game;
 import de.xwes.meinverein.main.model.GameDataSource;
 import de.xwes.meinverein.main.model.TeamDataSource;
+import de.xwes.meinverein.main.service.request.SynchronizeDataRequest;
 
 public class OverviewActivity extends ActionBarActivity
 {
@@ -100,6 +104,41 @@ public class OverviewActivity extends ActionBarActivity
         }
         else
         {
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+
+            if(activeNetwork != null)
+            {
+                //Sync Service
+                SynchronizeDataRequest syncRequest = new SynchronizeDataRequest();
+                try {
+                    jsonArray = syncRequest.execute(dbTeamName).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                GameDataSource gameData = new GameDataSource(this);
+                gameData.open();
+
+                //Json updaten auf DB
+                for(int i = 0; i < jsonArray.length(); i++)
+                {
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        long id = Long.parseLong(jsonObject.getString("id"));
+                        gameData.updateGame(id, new Game(jsonObject.getString("home"), jsonObject.getString("away"), jsonObject.getString("ergebnis"), jsonObject.getString("ort"), jsonObject.getString("zeit")));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                gameData.close();
+            }
+
             teamDataSource = new TeamDataSource(this);
             teamDataSource.open();
             teams = teamDataSource.getAllTeams();
