@@ -1,6 +1,8 @@
 package de.xwes.meinverein.main.view;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,7 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.xwes.meinverein.R;
 import de.xwes.meinverein.main.model.Game;
@@ -18,6 +28,8 @@ public class GameDetailActivity extends ActionBarActivity {
 
     private Game game;
     private String team;
+    private GoogleMap map;
+    static final LatLng HAMBURG = new LatLng(53.558, 9.927);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +59,25 @@ public class GameDetailActivity extends ActionBarActivity {
 
         ort.setText(game.getOrt());
         zeit.setText(newZeit);
+
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        if(map != null)
+        {
+            Geocoder coder = new Geocoder(this);
+            List<Address> address;
+
+            try {
+                address = coder.getFromLocationName(game.getOrt(), 3);
+                Address location = address.get(0);
+                LatLng adresse = new LatLng(location.getLatitude(), location.getLongitude());
+                map.addMarker(new MarkerOptions().position(adresse).title("Spielort"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG));
+
+        }
 
     }
 
