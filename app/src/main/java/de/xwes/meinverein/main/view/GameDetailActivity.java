@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -70,12 +71,13 @@ public class GameDetailActivity extends ActionBarActivity {
                 address = coder.getFromLocationName(game.getOrt(), 3);
                 Address location = address.get(0);
                 LatLng adresse = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.i("Adresse", adresse.toString());
                 map.addMarker(new MarkerOptions().position(adresse).title("Spielort"));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(adresse, 15));
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG));
 
         }
 
