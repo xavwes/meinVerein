@@ -46,12 +46,46 @@ public class GamesOverviewAdapter extends ArrayAdapter<Game>
 
         if(games.get(position).getHome().equals(selectedTeam))
         {
-            gegner.setText(games.get(position).getAway());
+            String awayTeam = games.get(position).getAway();
+            if(awayTeam.contains("/"))
+            {
+                String [] team = awayTeam.split("/");
+                awayTeam = team[0] + "/\n" + team[1];
+            }
+            else if(awayTeam.contains("-"))
+            {
+                String [] team = awayTeam.split("-");
+                awayTeam = team[0] + "-\n" + team[1];
+            }
+            else if(awayTeam.length() > 15)
+            {
+                String first = awayTeam.substring(0, 15);
+                String second = awayTeam.substring(15, awayTeam.length());
+                awayTeam = first + "-\n" + second;
+            }
+            gegner.setText(awayTeam);
             ergebnis.setText(games.get(position).getErgebnis());
         }
         else
         {
-            gegner.setText(games.get(position).getHome());
+            String homeTeam = games.get(position).getHome();
+            if(homeTeam.contains("/"))
+            {
+                String [] team = homeTeam.split("/");
+                homeTeam = team[0] + "/\n" + team[1];
+            }
+            else if(homeTeam.contains("-"))
+            {
+                String [] team = homeTeam.split("-");
+                homeTeam = team[0] + "-\n" + team[1];
+            }
+            else if(homeTeam.length() > 15)
+            {
+                String first = homeTeam.substring(0, 15);
+                String second = homeTeam.substring(15, homeTeam.length());
+                homeTeam = first + "-\n" + second;
+            }
+            gegner.setText(homeTeam);
             ergebnis.setText(changeErgebnis(games.get(position).getErgebnis()));
         }
         return rowView;

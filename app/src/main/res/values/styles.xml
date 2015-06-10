@@ -1,8 +1,23 @@
-<resources>
-
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/red</item>
+    </style>
+
+    <style name="ListView" parent="Widget.AppCompat.ListView.Menu">
+        <item name="android:divider">#b22222</item>
+        <item name="android:dividerHeight">3px</item>
+        <item name="android:headerDividersEnabled">false</item>
+    </style>
+
+    <style name="AppTextColor">
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
 </resources>

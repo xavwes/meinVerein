@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.xwes.meinverein" >
 
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="18"/>
+
     <permission
         android:name="de.xwes.meinverein.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
