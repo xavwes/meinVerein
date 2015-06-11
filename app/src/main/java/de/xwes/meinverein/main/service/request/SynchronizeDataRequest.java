@@ -31,7 +31,7 @@ public class SynchronizeDataRequest extends AsyncTask<String, Void, JSONArray>
     protected JSONArray doInBackground(String... params)
     {
         try {
-            StringBuilder url_request = new StringBuilder("http://192.168.0.7/meinVerein/server/synchronizeData.php?name=");
+            StringBuilder url_request = new StringBuilder("http://192.168.0.14/meinVerein/server/synchronizeData.php?name=");
             url_request.append(params[0]);
 
             Log.i("url", url_request.toString());

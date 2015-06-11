@@ -127,6 +127,7 @@ public class OverviewActivity extends ActionBarActivity
                 GameDataSource gameData = new GameDataSource(this);
                 gameData.open();
 
+                Log.i("JSONLe", jsonArray.length() + "");
                 //Json updaten auf DB
                 for(int i = 0; i < jsonArray.length(); i++)
                 {
