@@ -90,18 +90,18 @@ public class OverviewActivity extends ActionBarActivity
             teamDataSource = new TeamDataSource(this);
             teamDataSource.open();
 
-            for (String team : teams)
+            for(int i = 0; i < teams.size(); i++)
             {
-                teamDataSource.createTeam(team);
+                teamDataSource.createOrUpdateTeam(i, teams.get(i));
             }
             teamDataSource.close();
 
             gameDataSource = new GameDataSource(this);
             gameDataSource.open();
             //games to DB
-            for (Game game : games)
+            for(int i = 0; i < games.size(); i++)
             {
-                gameDataSource.createGame(game);
+                gameDataSource.createOrUpdateGame(i, games.get(i));
             }
 
             gameDataSource.close();
@@ -116,26 +116,50 @@ public class OverviewActivity extends ActionBarActivity
             {
                 //Sync Service
                 SynchronizeDataRequest syncRequest = new SynchronizeDataRequest();
+                JSONArray teamArray = null;
+                JSONArray gamesArray = null;
                 try {
                     jsonArray = syncRequest.execute(dbTeamName).get();
+                     teamArray = jsonArray.getJSONArray(0);
+                     gamesArray = jsonArray.getJSONArray(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                //TeamSynchronize
+                TeamDataSource teamData = new TeamDataSource(this);
+                teamData.open();
 
-                GameDataSource gameData = new GameDataSource(this);
-                gameData.open();
-
-                Log.i("JSONLe", jsonArray.length() + "");
-                //Json updaten auf DB
-                for(int i = 0; i < jsonArray.length(); i++)
+                for(int i = 0; i < teamArray.length(); i++)
                 {
                     JSONObject jsonObject = null;
                     try {
-                        jsonObject = jsonArray.getJSONObject(i);
+                        jsonObject = teamArray.getJSONObject(i);
                         long id = Long.parseLong(jsonObject.getString("id"));
-                        gameData.updateGame(id, new Game(jsonObject.getString("home"), jsonObject.getString("away"), jsonObject.getString("ergebnis"), jsonObject.getString("ort"), jsonObject.getString("zeit")));
+                        teamData.createOrUpdateTeam(id, jsonObject.getString("team"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                teamData.close();
+
+                //GameSynchronize
+                GameDataSource gameData = new GameDataSource(this);
+                gameData.open();
+
+                //Json updaten auf DB
+                for(int i = 0; i < gamesArray.length(); i++)
+                {
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = gamesArray.getJSONObject(i);
+                        long id = Long.parseLong(jsonObject.getString("id"));
+                        /*gameData.updateGame(id, new Game(jsonObject.getString("home"), jsonObject.getString("away"), jsonObject.getString("ergebnis"), jsonObject.getString("ort"), jsonObject.getString("zeit")));*/
+                        gameData.createOrUpdateGame(id,new Game(jsonObject.getString("home"), jsonObject.getString("away"), jsonObject.getString("ergebnis"), jsonObject.getString("ort"), jsonObject.getString("zeit")));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -161,7 +185,6 @@ public class OverviewActivity extends ActionBarActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 String mannschaftsName = parent.getItemAtPosition(position).toString();
-                Log.i("MannschaftsNAme", mannschaftsName);
 
                 Intent intent = new Intent(mContext, GamesOverviewActivity.class);
                 intent.putExtra("mannschaftsname", mannschaftsName);

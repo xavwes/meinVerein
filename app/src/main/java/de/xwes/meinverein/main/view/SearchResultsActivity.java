@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,7 +29,7 @@ import de.xwes.meinverein.main.service.request.CreateTeamDataRequest;
 import de.xwes.meinverein.main.service.request.RegisterRequest;
 
 
-public class SearchResultsActivity extends Activity
+public class SearchResultsActivity extends ActionBarActivity
 {
 
     private String[] teams;
@@ -43,6 +44,7 @@ public class SearchResultsActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
+        setTitle("Vereinsauswahl");
 
         mContext = this;
         ListView list = (ListView) findViewById(R.id.search_results);

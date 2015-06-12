@@ -56,6 +56,30 @@ public class GameDataSource
         database.update(dbHelper.TABLE_SPIELE, values, "id=" + id, null);
     }
 
+    public void createOrUpdateGame(long id, Game game)
+    {
+        ArrayList<Game> games = new ArrayList<Game>();
+        String sql = "Select * from spiele where id = ?";
+        Cursor cursor = database.rawQuery(sql, new String[]{String.valueOf(id)});
+         //Values einfügen
+        ContentValues values = new ContentValues();
+        values.put(dbHelper.COLUMN_HOMETEAM, game.getHome());
+        values.put(dbHelper.COLUMN_AWAYTEAM, game.getAway());
+        values.put(dbHelper.COLUMN_ERGEBNIS, game.getErgebnis());
+        values.put(dbHelper.COLUMN_ORT, game.getOrt());
+        values.put(dbHelper.COLUMN_TIME, game.getZeit());
+
+        if(cursor.getCount() == 0 && cursor != null)
+        {
+            long dbid = database.insert(dbHelper.TABLE_SPIELE, dbHelper.COLUMN_ID_SPIELE, values);
+        }
+        else
+        {
+            database.update(dbHelper.TABLE_SPIELE, values, "id=" + id, null);
+        }
+
+    }
+
     public ArrayList<Game> getAllGames(String mannschaft)
     {
         ArrayList<Game> games = new ArrayList<Game>();

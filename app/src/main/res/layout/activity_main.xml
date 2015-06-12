@@ -23,6 +23,7 @@
         <EditText
             android:id="@+id/search_input"
             android:layout_width="match_parent"
+            android:textColor="@color/textColor"
             android:layout_height="wrap_content" />
 
         <Button
@@ -30,7 +31,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:textSize="24sp"
+            android:background="#ffffff"
             android:text="@string/search_team" />
     </LinearLayout>
 

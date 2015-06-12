@@ -26,13 +26,14 @@ public class SearchRequest extends AsyncTask<String, Void, JSONArray> {
     static InputStream is = null;
     static JSONArray jObj = null;
     static String json = "";
+    public static final String BASE_URL = "http://192.168.0.14/meinVerein/server/";
 
     @Override
     protected JSONArray doInBackground(String... params)
     {
 
         try {
-            StringBuilder url_request = new StringBuilder("http://192.168.0.7/meinVerein/server/search_team.php?name=");
+            StringBuilder url_request = new StringBuilder(BASE_URL + "search_team.php?name=");
             url_request.append(params[0]);
 
             Log.i("url", url_request.toString());

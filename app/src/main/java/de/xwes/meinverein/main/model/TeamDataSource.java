@@ -40,6 +40,26 @@ public class TeamDataSource
             long id = database.insert(dbHelper.TABLE_TEAM, dbHelper.COLUMN_ID, values);
         }
 
+        public void createOrUpdateTeam(long id,String teamname)
+        {
+            ArrayList<String> teams = new ArrayList<String>();
+            String sql = "Select * from team where id = ?";
+            Cursor cursor = database.rawQuery(sql, new String[]{String.valueOf(id)});
+            //Values einfügen
+            ContentValues values = new ContentValues();
+            values.put(dbHelper.COLUMN_TEAM, teamname);
+
+            if(cursor.getCount() == 0 && cursor != null)
+            {
+                long dbid = database.insert(dbHelper.TABLE_TEAM, dbHelper.COLUMN_ID, values);
+            }
+            else
+            {
+                database.update(dbHelper.TABLE_TEAM, values, "id=" + id, null);
+            }
+
+        }
+
         public void deleteTeam(Team team)
         {
             long id = team.getId();

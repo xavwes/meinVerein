@@ -58,7 +58,7 @@ public class CreateTeamDataRequest extends AsyncTask<String, Void, JSONArray>
     protected JSONArray doInBackground(String... params)
     {
         try {
-            StringBuilder url_request = new StringBuilder("http://192.168.0.7/meinVerein/server/create_data.php?team=");
+            StringBuilder url_request = new StringBuilder(SearchRequest.BASE_URL + "create_data.php?team=");
             url_request.append(params[0]);
             url_request.append("&link=");
             url_request.append(params[1]);
