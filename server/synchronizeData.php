@@ -29,7 +29,7 @@
 
     while($row = mysql_fetch_array($result))
     {
-        $gamearray = array("home" => $row["home"], "away" => $row["away"], "ergebnis" => $row["ergebnis"], "ort" => $row["ort"], "zeit" => $row["zeit"]);
+        $gamearray = array("id" => $row['id'], "home" => $row["home"], "away" => $row["away"], "ergebnis" => $row["ergebnis"], "ort" => $row["ort"], "zeit" => $row["zeit"]);
         array_push($spiele, $gamearray);
     }
 
