@@ -26,7 +26,7 @@ public class SearchRequest extends AsyncTask<String, Void, JSONArray> {
     static InputStream is = null;
     static JSONArray jObj = null;
     static String json = "";
-    public static final String BASE_URL = "http://192.168.0.14/meinVerein/server/";
+    public static final String BASE_URL = "http://www.xwes.de/fussball-app/";
 
     @Override
     protected JSONArray doInBackground(String... params)

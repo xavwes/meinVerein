@@ -63,7 +63,7 @@ public class GamesOverviewAdapter extends ArrayAdapter<Game>
                 String second = awayTeam.substring(15, awayTeam.length());
                 awayTeam = first + "-\n" + second;
             }
-            gegner.setText(awayTeam);
+            gegner.setText("(H) " + awayTeam);
             ergebnis.setText(games.get(position).getErgebnis());
         }
         else
@@ -85,7 +85,7 @@ public class GamesOverviewAdapter extends ArrayAdapter<Game>
                 String second = homeTeam.substring(15, homeTeam.length());
                 homeTeam = first + "-\n" + second;
             }
-            gegner.setText(homeTeam);
+            gegner.setText("(A) " + homeTeam);
             ergebnis.setText(changeErgebnis(games.get(position).getErgebnis()));
         }
         return rowView;
