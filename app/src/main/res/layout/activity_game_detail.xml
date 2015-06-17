@@ -13,6 +13,7 @@
         android:id="@+id/zeit_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:singleLine="false"
         android:textSize="28dp"
         android:text="abc"/>
 
@@ -20,6 +21,8 @@
         android:id="@+id/spielort"
         android:text="spielort"
         android:textSize="28dp"
+        android:gravity="center_horizontal"
+        android:singleLine="false"
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,12 +53,13 @@ public class GameDetailActivity extends ActionBarActivity {
         }
 
         String zeit_game = game.getZeit();
-        String[] zeiten = zeit_game.split(" ");
+        /*String[] zeiten = zeit_game.split(" ");
         String newZeit = zeiten[0] + " " + zeiten[1] + "\n" + zeiten[2] + " Uhr";
-
+*/      String newZeit = zeit_game + " Uhr";
         TextView zeit = (TextView) findViewById(R.id.zeit_detail);
         TextView ort = (TextView) findViewById(R.id.spielort);
 
+        Log.i("Game", game.getOrt());
         ort.setText(game.getOrt());
         zeit.setText(newZeit);
 

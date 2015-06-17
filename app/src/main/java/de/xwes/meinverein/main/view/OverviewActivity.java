@@ -119,7 +119,7 @@ public class OverviewActivity extends ActionBarActivity
                 JSONArray teamArray = null;
                 JSONArray gamesArray = null;
                 try {
-                    jsonArray = syncRequest.execute(dbTeamName).get();
+                     jsonArray = syncRequest.execute(dbTeamName).get();
                      teamArray = jsonArray.getJSONArray(0);
                      gamesArray = jsonArray.getJSONArray(1);
                 } catch (InterruptedException e) {
@@ -158,6 +158,7 @@ public class OverviewActivity extends ActionBarActivity
                     try {
                         jsonObject = gamesArray.getJSONObject(i);
                         long id = Long.parseLong(jsonObject.getString("id"));
+                        Log.i("Ort", jsonObject.getString("ort"));
                         /*gameData.updateGame(id, new Game(jsonObject.getString("home"), jsonObject.getString("away"), jsonObject.getString("ergebnis"), jsonObject.getString("ort"), jsonObject.getString("zeit")));*/
                         gameData.createOrUpdateGame(id,new Game(jsonObject.getString("home"), jsonObject.getString("away"), jsonObject.getString("ergebnis"), jsonObject.getString("ort"), jsonObject.getString("zeit")));
                     } catch (JSONException e) {
