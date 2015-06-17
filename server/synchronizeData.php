@@ -29,7 +29,7 @@
 
     while($row = mysql_fetch_array($result))
     {
-        $gamearray = array("id" => $row['id'], "home" => utf8_decode($row["home"]), "away" => utf8_decode($row["away"]), "ergebnis" => utf8_decode($row["ergebnis"]), "ort" => utf8_decode($row["ort"]), "zeit" => utf8_decode($row["zeit"]));
+        $gamearray = array("id" => $row['id'], "home" => utf8_encode($row["home"]), "away" => utf8_encode($row["away"]), "ergebnis" => utf8_encode($row["ergebnis"]), "ort" => utf8_encode($row["ort"]), "zeit" => utf8_encode($row["zeit"]));
         array_push($spiele, $gamearray);
     }
 
