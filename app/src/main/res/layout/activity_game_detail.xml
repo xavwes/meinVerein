@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/spielort"
-        android:text="spielort"
+        android:text="Spielort"
         android:textSize="28dp"
         android:gravity="center_horizontal"
         android:singleLine="false"

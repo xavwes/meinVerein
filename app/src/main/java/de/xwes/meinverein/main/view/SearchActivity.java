@@ -1,6 +1,5 @@
 package de.xwes.meinverein.main.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +18,7 @@ import de.xwes.meinverein.R;
 import de.xwes.meinverein.main.service.request.SearchRequest;
 
 
-public class MainActivity extends ActionBarActivity
+public class SearchActivity extends ActionBarActivity
 {
     EditText search_input;
 
@@ -49,7 +48,7 @@ public class MainActivity extends ActionBarActivity
         if(teamname != null && link != null && dbName != null)
         {
             Log.i("Schon vorhanden" , teamname);
-            Intent myIntent = new Intent(MainActivity.this, OverviewActivity.class);
+            Intent myIntent = new Intent(SearchActivity.this, OverviewActivity.class);
             startActivity(myIntent);
         }
         else
@@ -76,7 +75,7 @@ public class MainActivity extends ActionBarActivity
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-                Intent myIntent = new Intent(MainActivity.this, SearchResultsActivity.class);
+                Intent myIntent = new Intent(SearchActivity.this, SearchResultsActivity.class);
                 myIntent.putExtra("json", jsonArray.toString());
                 startActivity(myIntent);
             }

@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,35 +52,37 @@ public class GameDetailActivity extends ActionBarActivity {
         }
 
         String zeit_game = game.getZeit();
-        /*String[] zeiten = zeit_game.split(" ");
+        String[] zeiten = zeit_game.split(" ");
         String newZeit = zeiten[0] + " " + zeiten[1] + "\n" + zeiten[2] + " Uhr";
-*/      String newZeit = zeit_game + " Uhr";
+
         TextView zeit = (TextView) findViewById(R.id.zeit_detail);
         TextView ort = (TextView) findViewById(R.id.spielort);
 
-        Log.i("Game", game.getOrt());
-        ort.setText(game.getOrt());
         zeit.setText(newZeit);
 
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        if(map != null)
+        if(game.getOrt().equals(""))
         {
-            Geocoder coder = new Geocoder(this);
-            List<Address> address;
+            ort.setText(game.getOrt());
+            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            if(map != null)
+            {
+                Geocoder coder = new Geocoder(this);
+                List<Address> address;
 
-            try {
-                address = coder.getFromLocationName(game.getOrt(), 3);
-                Address location = address.get(0);
-                LatLng adresse = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.i("Adresse", adresse.toString());
-                map.addMarker(new MarkerOptions().position(adresse).title("Spielort"));
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(adresse, 15));
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    address = coder.getFromLocationName(game.getOrt(), 3);
+                    Address location = address.get(0);
+                    LatLng adresse = new LatLng(location.getLatitude(), location.getLongitude());
+                    Log.i("Adresse", adresse.toString());
+                    map.addMarker(new MarkerOptions().position(adresse).title("Spielort"));
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(adresse, 15));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
-
-
         }
+
 
     }
 
