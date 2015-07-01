@@ -99,6 +99,30 @@ public class GameDataSource
         return games;
     }
 
+    public Game getGame(long id)
+    {
+        Game returningGame = new Game();
+        String sql = "Select * from spiele where id = ?";
+        Cursor cursor = database.rawQuery(sql, new String[]{String.valueOf(id)});
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            Game g = cursorToGame(cursor);
+            returningGame.setId(g.getId());
+            returningGame.setHome(g.getHome());
+            returningGame.setAway(g.getAway());
+            returningGame.setErgebnis(g.getErgebnis());
+            returningGame.setOrt(g.getOrt());
+            returningGame.setZeit(g.getZeit());
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return returningGame;
+    }
+
     private Game cursorToGame(Cursor cursor)
     {
         Game game = new Game();
