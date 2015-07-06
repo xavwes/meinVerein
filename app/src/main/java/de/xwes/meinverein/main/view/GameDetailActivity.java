@@ -60,7 +60,8 @@ public class GameDetailActivity extends ActionBarActivity {
 
         zeit.setText(newZeit);
 
-        if(game.getOrt().equals(""))
+        Log.i("Ort", game.getOrt());
+        if(!game.getOrt().equals(" "))
         {
             ort.setText(game.getOrt());
             map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
